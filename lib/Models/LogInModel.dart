@@ -285,7 +285,7 @@ class Response {
       data['header'] = this.header!.map((v) => v.toJson()).toList();
     }
     if (this.cookie != null) {
-      data['cookie'] = this.cookie!.map((v) => v.toJson()).toList();
+      data['cookie'] = this.cookie!.map((v) => v.toJson).toList();
     }
     data['body'] = this.body;
     return data;

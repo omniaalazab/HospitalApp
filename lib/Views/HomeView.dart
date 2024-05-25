@@ -1,13 +1,31 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:task_app/Views/Health.dart';
+import 'package:task_app/Views/SearchView.dart';
+import 'package:task_app/widget/CustomAppBar.dart';
 import 'package:task_app/widget/CustomCardInfo.dart';
 import 'package:task_app/widget/customBodyText.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   HomeView({super.key});
-  TextEditingController searchcontroller = TextEditingController();
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  int SelectedIndex = 0;
+  var icons = [
+    Icons.home,
+    Icons.newspaper,
+  ];
+  List<Map<String, dynamic>> screens = [
+    {'screen': SearchView(), 'title': 'الرئيسية'},
+    {'screen': HealthView(), 'title': 'اخبار صحية'},
+  ];
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -17,70 +35,44 @@ class HomeView extends StatelessWidget {
             backgroundColor: Colors.blueGrey,
             elevation: 0,
             centerTitle: true,
-            title: Text('البحث'),
+            title: CustomAppBar(title: 'البحث'),
+          ),
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            onTap: (value) {
+              setState(() {
+                SelectedIndex = value;
+              });
+            },
+            itemCount: icons.length,
+            tabBuilder: (index, isActive) {
+              return Icon(
+                icons[index],
+                color: isActive
+                    ? Color.fromARGB(255, 116, 141, 196)
+                    : Colors.black,
+                size: isActive ? 40 : 25,
+              );
+            },
+            activeIndex: SelectedIndex,
+            gapLocation: GapLocation.none,
+            notchSmoothness: NotchSmoothness.smoothEdge,
+            leftCornerRadius: 32,
+            rightCornerRadius: 32,
+
+            // currentIndex: SelectedIndex,
+            // items: [
+            //   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            //   BottomNavigationBarItem(
+            //       icon: Icon(Icons.add_chart), label: 'Order'),
+            //   BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            // ],
           ),
           body: Center(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: searchcontroller,
-                    onChanged: (value) {},
-                    onSubmitted: (value) {},
-                    decoration: InputDecoration(
-                      hintText: 'ابحث هنا',
-                      label: CustomBodyText(
-                        text: 'ابحث ',
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 1.5,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Expanded(
-                      child: ListView(
-                    children: [
-                      CustomCardInfo(),
-                      CustomCardInfo(),
-                      CustomCardInfo(),
-                    ],
-                  )
-
-                      //   ListView.builder(
-                      //     itemCount: 15,
-                      //     itemBuilder: (context, index) {
-                      //       return Card(
-                      //         child: ListTile(
-
-                      //           title: CustomBodyText(
-                      //             text: 'Doctor name :  ',
-                      //             textsize: 20,
-                      //           ),
-                      //           subtitle: CustomBodyText(
-                      //             text: 'Date : 22/50/2024      Time: 3:30pm',
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //   ),
-                      ),
-                ],
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: screens[SelectedIndex]['screen']),
             ),
           ),
         ));

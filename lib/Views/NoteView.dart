@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:task_app/widget/CustomAppBar.dart';
 import 'package:task_app/widget/customBodyText.dart';
 
 class NoteView extends StatelessWidget {
@@ -15,7 +16,9 @@ class NoteView extends StatelessWidget {
           backgroundColor: Colors.blueGrey,
           elevation: 0,
           centerTitle: true,
-          title: Text('الملاحظات'),
+          title: CustomAppBar(
+            title: ('الملاحظات'),
+          ),
         ),
         body: Padding(
             padding: const EdgeInsets.all(15.0),
